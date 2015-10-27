@@ -1,24 +1,24 @@
 # Matrix Class - 10/19/15 - Zachary Geier
 
 class Matrix:
-    def __init__(self, rows, cols, m=[]):
+    def __init__(self, rows, cols, m):
         self.rows = rows
         self.cols = cols
-        self.matrix = m
+
+        if m == []:
+            self.matrix = m
 
     # Overrides + operator for matrix addition
     def __add__(self, m):
-        result = self.matrix
+        result = Matrix(self.rows, self.cols, [])
 
         # Checks if both matrices are the same size
-        if self.rows == m.getRows and self.cols == m.getCols():
+        if self.rows == m.getRows() and self.cols == m.getCols():
             # Populates/Calculates result matrix
             for y in range(len(self.matrix)):
                 for x in range(len(self.matrix[y])):
-                    result[y][x] += m.getMatrix()[y][x]
-
-        else:
-            result = []
+                    sum1 = result.getEntry(y,x) + m.getEntry(y, x)
+                    result.setEntry(y,x, sum)
 
         return result
 
@@ -34,31 +34,27 @@ class Matrix:
 
     # Overrides * operator for matrix multiplication
     def __mul__(self, m):
-        result = []
+        result = Matrix(self.rows, self.rows, [])
         data = []
         row = []
-        sum = 0
 
         # Calculates matrix multiplication values
         for y1 in range(self.rows): # first Row
+            row = []
             for x2 in range(m.getCols()): # second Col
+                sum1 = 0
                 for y2 in range(m.getRows()): # second Row
-                    sum += self.matrix[y1][y2] * m.getMatrix()[y2][x2]
-                data.append(sum)
-                sum = 0
-
-        # Data (in 1D array) is transferred to a correct 2D array
-        i = 0
-        for y in range(m.getCols()):
-            for x in range(self.rows):
-                row.append(data[i])
-                i += 1
-            result.append(row)
+                    sum1 += self.matrix[y1][y2] * m.getEntry(y2,x2)
+                row.append(sum1)
+            result.getMatrix().append(row)
 
         return result
 
     # Prompts the user to set all values of a matrix
     def inputMatrix(self):
+        self.rows = eval(input("Rows: "))
+        self.cols = eval(input("Columns: "))
+
         for r in range(self.rows):
             temp = []
             for c in range(self.cols):
