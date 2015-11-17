@@ -1,11 +1,13 @@
-# Matrix Class Tester - 10/20/15 - Zachary Geier
+# Matrix Class Tester - 10/20/15 - Zachary Geier & Katy Mckenzie
 
 from Matrix import Matrix
 
+
 # Calculates the inverse for 2x2 and 3x3 matrices
 def Inverse(matrix):
-
     if matrix.getRows() == 2 and matrix.getCols() == 2:
+        determinant = matrix.determinant()
+
         #Matrix values
         a = matrix.getEntry(0,0);  b = matrix.getEntry(0,1)
         c = matrix.getEntry(1,0);  d = matrix.getEntry(1,1)
@@ -19,9 +21,11 @@ def Inverse(matrix):
         matrix.setEntry(1, 0, cx);  matrix.setEntry(1, 1, dx)
 
         # Final Value
-        result = matrix % (1 / matrix.determinant())
+        result = matrix % (1 / determinant)
 
     elif matrix.getRows() == 3 and matrix.getCols() == 3:
+        determinant = matrix.determinant()
+
         # Matrix Values
         a = matrix.getEntry(0,0);  b = matrix.getEntry(0,1);  c = matrix.getEntry(0,2)
         d = matrix.getEntry(1,0);  e = matrix.getEntry(1,1);  f = matrix.getEntry(1,2)
@@ -38,34 +42,39 @@ def Inverse(matrix):
         matrix.setEntry(2, 0, gx);  matrix.setEntry(2, 1, hx);  matrix.setEntry(2, 2, ix)
 
         # Final Value
-        result = matrix % (1/matrix.determinant())
+        result = matrix % (1 / determinant)
 
     return result
 
 # Returns if a solution exists for a matrix (determinant does not equal 0)
 def DoesSolutionExist(matrix):
-    result = True
-    if matrix.determinant() == 0:
-        result = False
-
     return matrix.determinant() != 0
 
 # Finds the solution to a system of matrices (inverse of A times C)
-def SystemSolution(A, C):
-    return Inverse(A) * C
+def SystemSolution(coefficient, constant):
+    return Inverse(coefficient) * constant
 
+# Solves a system of equations and outputs results
 def main():
-    print("Matrix 1")
-    m1 = Matrix(0,0,m=[])
-    m1.inputMatrix()
+    # Gets coefficient matrix
+    print("Input the coefficient matrix: ")
+    coeff = Matrix(0,0,m=[])
+    coeff.inputMatrix()
 
-    print("Matrix 2")
-    m2 = Matrix(0,0,m=[])
-    m2.inputMatrix()
+    # Gets constant matrix
+    print("Input the constant matrix: ")
+    const = Matrix(0,0,m=[])
+    const.inputMatrix()
 
-    print("Matrix 1:" + m1)
-    print("Matrix 2:" + m2)
+    if DoesSolutionExist(coeff):
+        sol = SystemSolution(coeff, const)
+        print("The solution matrix is:", sol)
 
-    print(m1 * m2)
+        print("The solutions to the system are: ", end='')
+        for v in sol.getMatrix():
+            print(v, end=' ')
+
+    else:
+        print("Solution does not exist!")
 
 main()

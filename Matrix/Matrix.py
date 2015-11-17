@@ -1,12 +1,16 @@
-# Matrix Class - 10/19/15 - Zachary Geier
+# Matrix Class - 10/19/15 - Zachary Geier & Katy Mckenzie
+
 
 class Matrix:
     def __init__(self, rows, cols, m):
-        self.rows = rows
-        self.cols = cols
-
-        if m == []:
+        if m == 0 or m == []:
+            self.matrix = []
+            self.rows = 0
+            self.cols = 0
+        else:
             self.matrix = m
+            self.rows = len(m)
+            self.cols = len(m[0])
 
     # Overrides + operator for matrix addition
     def __add__(self, m):
@@ -17,38 +21,38 @@ class Matrix:
             # Populates/Calculates result matrix
             for y in range(len(self.matrix)):
                 for x in range(len(self.matrix[y])):
-                    sum1 = result.getEntry(y,x) + m.getEntry(y, x)
-                    result.setEntry(y,x, sum)
+                    val = result.getEntry(y,x) + m.getEntry(y, x)
+                    result.setEntry(y,x, val)
 
         return result
 
     # Overrides % operator for matrix scalar multiplication
     def __mod__(self, scalar):
-        result = self.matrix
+        result = []
 
         for y in range(len(self.matrix)):
+            row = []
             for x in range(len(self.matrix[y])):
-                result[y][x] *= scalar
+                row.append(self.matrix[y][x] * scalar)
+            result.append(row)
 
-        return result
+        return Matrix(len(result),len(result[0]), m=result)
 
     # Overrides * operator for matrix multiplication
     def __mul__(self, m):
-        result = Matrix(self.rows, self.rows, [])
-        data = []
-        row = []
+        result = []
 
         # Calculates matrix multiplication values
         for y1 in range(self.rows): # first Row
             row = []
             for x2 in range(m.getCols()): # second Col
-                sum1 = 0
+                val = 0
                 for y2 in range(m.getRows()): # second Row
-                    sum1 += self.matrix[y1][y2] * m.getEntry(y2,x2)
-                row.append(sum1)
-            result.getMatrix().append(row)
-
-        return result
+                    val += self.matrix[y1][y2] * m.getEntry(y2,x2)
+                row.append(val)
+            result.append(row)
+        
+        return Matrix(len(result), len(result[0]), m=result)
 
     # Prompts the user to set all values of a matrix
     def inputMatrix(self):
@@ -107,10 +111,9 @@ class Matrix:
 
     # Overrides print method to return a string print out of the matrix
     def __str__(self):
-        result = ''
+        result = '\n'
         for y in range(self.rows):
             for x in range(self.cols):
-                result += str(self.matrix[y][x]) + ' '
+                result += format(self.matrix[y][x], '3.3f') + ' '
             result += '\n'
         return result
-
